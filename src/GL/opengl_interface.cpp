@@ -66,7 +66,6 @@ void display(void)
 
     for (const auto& item : Displayable::display_queue)
     {
-        std::cout << Displayable::display_queue.size() << std::endl; // prints "Hello World"
         item->display();
     }
     glDisable(GL_TEXTURE_2D);
