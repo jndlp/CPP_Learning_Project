@@ -35,6 +35,6 @@ std::string AircraftFactory::new_aicraft_number() const
 
 std::string AircraftFactory::airline(int index)
 {
-    assert(index > 0 && index < 8);
+    assert(index >= 0 && index < 8);
     return airlines[index];
 }
