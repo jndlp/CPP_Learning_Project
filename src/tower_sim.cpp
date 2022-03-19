@@ -22,6 +22,8 @@ TowerSimulation::TowerSimulation(int argc, char** argv) :
     std::srand(static_cast<unsigned int>(std::time(nullptr)));
     GL::init_gl(argc, argv, "Airport Tower Simulation");
 
+    GL::move_queue.emplace(&aircraft_manager);
+
     create_keystrokes();
 }
 
@@ -30,7 +32,7 @@ TowerSimulation::~TowerSimulation()
     delete airport;
 }
 
-void TowerSimulation::create_aircraft(const AircraftType& type) const
+void TowerSimulation::create_aircraft(const AircraftType& type)
 {
     assert(airport); // make sure the airport is initialized before creating aircraft
 
@@ -41,15 +43,15 @@ void TowerSimulation::create_aircraft(const AircraftType& type) const
 
     Aircraft* aircraft = new Aircraft { type, flight_number, start, direction, airport->get_tower() };
 
-    GL::move_queue.emplace(aircraft);
+    aircraft_manager.add(std::unique_ptr<Aircraft>(aircraft));
 }
 
-void TowerSimulation::create_random_aircraft() const
+void TowerSimulation::create_random_aircraft()
 {
     create_aircraft(*(aircraft_types[rand() % 3]));
 }
 
-void TowerSimulation::create_keystrokes() const
+void TowerSimulation::create_keystrokes()
 {
     GL::keystrokes.emplace('x', []() { GL::exit_loop(); });
     GL::keystrokes.emplace('q', []() { GL::exit_loop(); });
