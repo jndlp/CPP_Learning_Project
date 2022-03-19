@@ -1,8 +1,13 @@
 #pragma once
 
+#include "aircraft_factory.hpp"
 #include "aircraft_manager.hpp"
 
+#include <memory>
+
+class Aircraft;
 class Airport;
+
 struct AircraftType;
 
 class TowerSimulation
@@ -15,9 +20,7 @@ private:
     TowerSimulation& operator=(const TowerSimulation&) = delete;
 
     AircraftManager aircraft_manager;
-
-    void create_aircraft(const AircraftType& type);
-    void create_random_aircraft();
+    AircraftFactory aircraft_factory;
 
     void create_keystrokes();
     void display_help() const;
