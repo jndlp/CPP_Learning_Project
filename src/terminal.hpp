@@ -41,11 +41,20 @@ public:
 
     bool update() override
     {
-        if (in_use() && is_servicing())
+        if (in_use() && is_servicing() && !current_aircraft->is_low_on_fuel())
         {
             ++service_progress;
         }
 
         return true;
+    }
+
+    void refill_aircraft_if_needed(int& fuel_stock)
+    {
+        if (current_aircraft != nullptr && current_aircraft->in_terminal() &&
+            current_aircraft->is_low_on_fuel())
+        {
+            current_aircraft->refill(fuel_stock);
+        }
     }
 };

@@ -15,5 +15,6 @@ private:
 public:
     void add(std::unique_ptr<Aircraft> aircraft);
     bool update() override;
+    int get_required_fuel();
     void number_aircraft_in_airline(const std::string& airline) const;
 };

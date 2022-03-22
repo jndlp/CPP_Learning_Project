@@ -7,6 +7,7 @@
 #include "tower.hpp"
 #include "waypoint.hpp"
 
+#include <experimental/random>
 #include <string>
 #include <string_view>
 
@@ -21,6 +22,8 @@ private:
     bool landing_gear_deployed = false; // is the landing gear deployed?
     bool is_at_terminal        = false;
     bool service_done          = false;
+
+    mutable int fuel = std::experimental::randint(150, 3000);
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the
@@ -41,6 +44,8 @@ private:
     void add_waypoint(const Waypoint& wp, const bool front);
     bool is_on_ground() const { return pos.z() < DISTANCE_THRESHOLD; }
     float max_speed() const { return is_on_ground() ? type.max_ground_speed : type.max_air_speed; }
+
+    bool is_circling() const;
 
     Aircraft(const Aircraft&) = delete;
     Aircraft& operator=(const Aircraft&) = delete;
@@ -63,6 +68,13 @@ public:
 
     void display() const override;
     bool update() override;
+    bool has_terminal() const;
+
+    int get_fuel() const { return fuel; }
+    bool is_low_on_fuel() const { return fuel < 200; }
+    bool in_terminal() const { return is_at_terminal; }
+
+    void refill(int& fuel_stock) const;
 
     friend class Tower;
 };

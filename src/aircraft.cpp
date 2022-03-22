@@ -101,6 +101,22 @@ bool Aircraft::update()
 
     if (!is_at_terminal)
     {
+        if (fuel-- <= 0)
+        {
+            std::cout << "Aircraft " << flight_number << " crashed." << std::endl;
+            return false;
+        }
+
+        if (is_circling())
+        {
+
+            auto newWaypoints = control.reserve_terminal(*this);
+            if (!newWaypoints.empty())
+            {
+                waypoints = std::move(newWaypoints);
+            }
+        }
+
         turn_to_waypoint();
         // move in the direction of the current speed
         pos += speed;
@@ -147,4 +163,30 @@ bool Aircraft::update()
 void Aircraft::display() const
 {
     type.texture.draw(project_2D(pos), { PLANE_TEXTURE_DIM, PLANE_TEXTURE_DIM }, get_speed_octant());
+}
+
+bool Aircraft::has_terminal() const
+{
+    return !waypoints.empty() && waypoints.back().is_at_terminal();
+}
+
+bool Aircraft::is_circling() const
+{
+    return !has_terminal() && !is_at_terminal && !service_done;
+}
+
+void Aircraft::refill(int& fuel_stock) const
+{
+    int fuel_to_add = 3000 - fuel;
+
+    if (fuel_stock <= fuel_to_add)
+    {
+        fuel_to_add = fuel_stock;
+    }
+
+    fuel += fuel_to_add;
+    fuel_stock -= fuel_to_add;
+
+    std::cout << "Aicraft " << flight_number << " refueled to " << fuel << " with " << fuel_to_add
+              << std::endl;
 }
