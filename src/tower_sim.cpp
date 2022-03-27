@@ -42,6 +42,13 @@ void TowerSimulation::create_keystrokes()
     GL::keystrokes.emplace('u', []() { GL::up_frame_rate(); });
     GL::keystrokes.emplace('d', []() { GL::down_frame_rate(); });
     GL::keystrokes.emplace('p', []() { GL::pause(); });
+    GL::keystrokes.emplace('p', []() { GL::pause(); });
+    GL::keystrokes.emplace('m',
+                           [this]()
+                           {
+                               std::cout << "Number of aircraft that crashed: "
+                                         << aircraft_manager.number_aircraft_crash() << std::endl;
+                           });
 
     for (int i = 0; i < 8; i++)
     {

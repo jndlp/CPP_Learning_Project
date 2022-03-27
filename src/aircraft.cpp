@@ -104,7 +104,8 @@ bool Aircraft::update()
         if (fuel-- <= 0)
         {
             std::cout << "Aircraft " << flight_number << " crashed." << std::endl;
-            return false;
+            using namespace std::string_literals;
+            throw AircraftCrash { flight_number + " is out of fuel" };
         }
 
         if (is_circling())

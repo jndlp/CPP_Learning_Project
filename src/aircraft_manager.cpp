@@ -31,7 +31,18 @@ bool AircraftManager::update()
               });
 
     aircrafts.erase(std::remove_if(aircrafts.begin(), aircrafts.end(),
-                                   [](auto& aircraft) { return !aircraft->update(); }),
+                                   [this](auto& aircraft)
+                                   {
+                                       try
+                                       {
+                                           return !aircraft->update();
+                                       } catch (AircraftCrash& exception)
+                                       {
+                                           this->_nb_aicraft_crashed++;
+                                           std::cerr << exception.what() << std::endl;
+                                           return true;
+                                       }
+                                   }),
                     aircrafts.end());
 
     return true;
