@@ -1,12 +1,14 @@
 #include "aircraft_manager.hpp"
 
 #include "aircraft.hpp"
+#include "aircraft_crash.hpp"
 
 #include <iostream>
 #include <utility>
 
 void AircraftManager::add(std::unique_ptr<Aircraft> aircraft)
 {
+    assert(aircraft != NULL);
     aircrafts.emplace_back(std::move(aircraft));
 }
 
@@ -38,7 +40,7 @@ bool AircraftManager::update()
                                            return !aircraft->update();
                                        } catch (AircraftCrash& exception)
                                        {
-                                           this->_nb_aicraft_crashed++;
+                                           this->nb_aicraft_crashed++;
                                            std::cerr << exception.what() << std::endl;
                                            return true;
                                        }
@@ -48,15 +50,16 @@ bool AircraftManager::update()
     return true;
 }
 
-void AircraftManager::number_aircraft_in_airline(const std::string& airline) const
+int AircraftManager::number_aircraft_in_airline(const std::string_view airline) const
 {
-    const auto cnt = std::count_if(aircrafts.begin(), aircrafts.end(),
-                                   [airline](const auto& aircraft)
-                                   { return aircraft->get_flight_num().substr(0, 2).compare(airline) == 0; });
-    std::cout << "Number of Aircraft in Airline " << airline << ": " << cnt << std::endl;
+    assert(!airline.empty());
+
+    return std::count_if(aircrafts.begin(), aircrafts.end(),
+                         [airline](const auto& aircraft)
+                         { return aircraft->get_flight_num().substr(0, 2).compare(airline) == 0; });
 }
 
-int AircraftManager::get_required_fuel()
+int AircraftManager::get_required_fuel() const
 {
     int required_fuel = 0;
 
@@ -65,7 +68,7 @@ int AircraftManager::get_required_fuel()
                   {
                       if (aircraft->is_low_on_fuel() && aircraft->in_terminal())
                       {
-                          required_fuel += (3000 - aircraft->get_fuel());
+                          required_fuel += (MAX_FUEL - aircraft->get_fuel());
                       }
                   });
 

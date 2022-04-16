@@ -6,9 +6,10 @@
 #include <cmath>
 #include <iostream>
 #include <numeric>
-#include <type_traits>
 
-template <std::size_t dimension, typename TypePoint> class Point
+template <std::size_t dimension, typename TypePoint,
+          std::enable_if_t<std::is_arithmetic_v<TypePoint>, bool> = true>
+class Point
 {
 
 private:
@@ -19,7 +20,7 @@ public:
 
     Point() = default;
 
-    template <typename... Arg, std::enable_if_t<std::is_arithmetic_v<TypePoint>, bool> = true>
+    template <typename... Arg>
     Point(const TypePoint& first, Arg... others) : values { first, static_cast<TypePoint>(others)... }
     {
         static_assert(dimension - 1 == sizeof...(Arg));

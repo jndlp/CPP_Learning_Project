@@ -9,6 +9,7 @@ class DynamicObject
 public:
     virtual ~DynamicObject() {}
 
+    // We return a boolean to say if the object is to be deleted
     virtual bool update() = 0;
 };
 

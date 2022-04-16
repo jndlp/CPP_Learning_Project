@@ -1,9 +1,13 @@
 #include "opengl_interface.hpp"
 
+#include "assert.h"
+
 namespace GL {
 
 void handle_error(const std::string& prefix, const GLenum err)
 {
+    assert(!prefix.empty());
+
     if (err != GL_NO_ERROR)
     {
         throw std::runtime_error { prefix + std::string { ": " } +
@@ -38,6 +42,8 @@ void toggle_fullscreen()
 
 void change_zoom(const float factor)
 {
+    assert(factor > 0);
+
     zoom *= factor;
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -47,6 +53,9 @@ void change_zoom(const float factor)
 
 void reshape_window(int w, int h)
 {
+    assert(w > 0);
+    assert(h > 0);
+
     glViewport(0, 0, w, h);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -76,6 +85,7 @@ void timer(const int step)
 {
     if (!paused)
     {
+        // We go through the container by deleting the objects that must be
         for (auto it = move_queue.begin(); it != move_queue.end();)
         {
             auto* dynamic_obj = *it;
@@ -97,6 +107,8 @@ void timer(const int step)
 
 void init_gl(int argc, char** argv, const char* title)
 {
+    assert(argc > 0);
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_RGBA);
     glutInitWindowSize(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);

@@ -1,6 +1,7 @@
 #include "aircraft.hpp"
 
 #include "GL/opengl_interface.hpp"
+#include "aircraft_crash.hpp"
 
 #include <cmath>
 
@@ -90,13 +91,16 @@ template <bool front> void Aircraft::add_waypoint(const Waypoint& wp)
 
 bool Aircraft::update()
 {
+    // Si on a plus d'instruction
     if (waypoints.empty())
     {
+        // Si il est deja passer par un terminal on le retire
         if (service_done)
         {
             return false;
         }
 
+        // Sinon on ajoute un chemin
         const auto front = false;
         for (const auto& wp : control.get_instructions(*this))
         {
@@ -104,18 +108,21 @@ bool Aircraft::update()
         }
     }
 
+    // Si il n'est pas dans un terminal
     if (!is_at_terminal)
     {
-        if (fuel-- <= 0)
-        {
-            std::cout << "Aircraft " << flight_number << " crashed." << std::endl;
-            using namespace std::string_literals;
-            throw AircraftCrash { flight_number + " is out of fuel" };
-        }
-
+        // Si il tourne en rond
         if (is_circling())
         {
+            // On retire de l'essence
+            if (fuel-- <= 0)
+            {
+                std::cout << "Aircraft " << flight_number << " crashed." << std::endl;
+                using namespace std::string_literals;
+                throw AircraftCrash { flight_number, pos, speed, "crashed due to fuel" };
+            }
 
+            // On reserve un terminal
             auto newWaypoints = control.reserve_terminal(*this);
             if (!newWaypoints.empty())
             {
@@ -146,7 +153,7 @@ bool Aircraft::update()
             if (!landing_gear_deployed)
             {
                 using namespace std::string_literals;
-                throw AircraftCrash { flight_number + " crashed into the ground"s };
+                throw AircraftCrash { flight_number, pos, speed, " crashed into the ground" };
             }
         }
         else
@@ -183,7 +190,9 @@ bool Aircraft::is_circling() const
 
 void Aircraft::refill(int& fuel_stock) const
 {
-    int fuel_to_add = 3000 - fuel;
+    assert(fuel_stock >= 0);
+
+    int fuel_to_add = MAX_FUEL - fuel;
 
     if (fuel_stock <= fuel_to_add)
     {

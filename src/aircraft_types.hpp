@@ -22,5 +22,4 @@ struct AircraftType
     {}
 };
 
-constexpr size_t NUM_AIRCRAFT_TYPES = 3;
-inline AircraftType* aircraft_types[NUM_AIRCRAFT_TYPES] {};
+inline AircraftType* aircraft_types[AIRCRAFT_TYPE_NUMBER] {};

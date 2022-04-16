@@ -78,15 +78,15 @@ public:
         {
             fuel_stock += ordered_fuel;
             ordered_fuel     = std::min(aircraft_manager->get_required_fuel(), 5000);
-            next_refill_time = 100;
+            next_refill_time = REFUEL_TIME;
         }
         else
         {
-            next_refill_time -= 1;
+            next_refill_time--;
             for (auto& terminal : terminals)
             {
-                terminal.refill_aircraft_if_needed(fuel_stock);
                 terminal.update();
+                terminal.refill_aircraft_if_needed(fuel_stock);
             }
         }
 

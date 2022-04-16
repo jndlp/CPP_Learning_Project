@@ -27,5 +27,13 @@ constexpr float DEFAULT_ZOOM = 2.0f;
 // default window dimensions
 constexpr size_t DEFAULT_WINDOW_WIDTH  = 800;
 constexpr size_t DEFAULT_WINDOW_HEIGHT = 600;
-
-using AircraftCrash = std::runtime_error;
+// default airlines number
+constexpr int AIRLINES_NUMBER = 8;
+// default number of aircraft type
+constexpr int AIRCRAFT_TYPE_NUMBER = 3;
+// default max fuel
+constexpr int MAX_FUEL = 3000;
+// default min fuel
+constexpr int MIN_FUEL = 150;
+// default refuel time
+constexpr int REFUEL_TIME = 100;

@@ -1,27 +1,22 @@
 #pragma once
 
 #include "GL/texture.hpp"
-#include "aircraft.hpp"
 #include "airport.hpp"
-#include "airport_type.hpp"
 #include "img/image.hpp"
 #include "img/media_path.hpp"
-
-#include <string_view>
-#include <unordered_set>
 
 class AircraftFactory
 {
 private:
-    const std::string airlines[8] = { "AF", "LH", "EY", "DL", "KL", "BA", "AY", "EY" };
-    AircraftType* aircraft_types[NUM_AIRCRAFT_TYPES] {};
+    const std::string airlines[AIRLINES_NUMBER] = { "AF", "LH", "EY", "DL", "KL", "BA", "AY", "EY" };
+    AircraftType* aircraft_types[AIRCRAFT_TYPE_NUMBER] {};
     std::unordered_set<std::string_view> aircraft_numbers;
 
     std::string new_aicraft_number() const;
 
 public:
-    [[nodiscard]] std::unique_ptr<Aircraft> create_aircraft(const AircraftType& type, Airport* airport);
-    [[nodiscard]] std::unique_ptr<Aircraft> create_random_aircraft(Airport* airport);
+    std::unique_ptr<Aircraft> create_aircraft(const AircraftType& type, Airport* airport);
+    std::unique_ptr<Aircraft> create_random_aircraft(Airport* airport);
     std::string airline(int index);
 
     // note: textures have to be initialized after initializing glut, so we'll need

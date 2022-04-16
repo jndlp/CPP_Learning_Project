@@ -15,10 +15,10 @@ std::string AircraftFactory::new_aicraft_number() const
     return flight_number;
 }
 
-[[nodiscard]] std::unique_ptr<Aircraft> AircraftFactory::create_aircraft(const AircraftType& type,
-                                                                         Airport* airport)
+std::unique_ptr<Aircraft> AircraftFactory::create_aircraft(const AircraftType& type, Airport* airport)
 {
-    assert(airport); // make sure the airport is initialized before creating aircraft
+    assert(airport != NULL);
+
     const std::string flight_number = new_aicraft_number();
     const float angle       = (rand() % 1000) * 2 * 3.141592f / 1000.f; // random angle between 0 and 2pi
     const Point3D start     = Point3D { std::sin(angle), std::cos(angle), 0 } * 3 + Point3D { 0, 0, 2 };
@@ -28,9 +28,9 @@ std::string AircraftFactory::new_aicraft_number() const
     return std::make_unique<Aircraft>(type, flight_number, start, direction, airport->get_tower());
 }
 
-[[nodiscard]] std::unique_ptr<Aircraft> AircraftFactory::create_random_aircraft(Airport* airport)
+std::unique_ptr<Aircraft> AircraftFactory::create_random_aircraft(Airport* airport)
 {
-    return create_aircraft(*(aircraft_types[rand() % 3]), airport);
+    return create_aircraft(*(aircraft_types[rand() % AIRCRAFT_TYPE_NUMBER]), airport);
 }
 
 std::string AircraftFactory::airline(int index)

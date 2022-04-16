@@ -42,7 +42,6 @@ void TowerSimulation::create_keystrokes()
     GL::keystrokes.emplace('u', []() { GL::up_frame_rate(); });
     GL::keystrokes.emplace('d', []() { GL::down_frame_rate(); });
     GL::keystrokes.emplace('p', []() { GL::pause(); });
-    GL::keystrokes.emplace('p', []() { GL::pause(); });
     GL::keystrokes.emplace('m',
                            [this]()
                            {
@@ -52,8 +51,14 @@ void TowerSimulation::create_keystrokes()
 
     for (int i = 0; i < 8; i++)
     {
-        GL::keystrokes.emplace(i + '0', [this, i]()
-                               { aircraft_manager.number_aircraft_in_airline(aircraft_factory.airline(i)); });
+        GL::keystrokes.emplace(i + '0',
+                               [this, i]()
+                               {
+                                   std::cout << "Number of Aircraft in Airline " << i << ": "
+                                             << aircraft_manager.number_aircraft_in_airline(
+                                                    aircraft_factory.airline(i))
+                                             << std::endl;
+                               });
     }
 }
 

@@ -23,7 +23,7 @@ private:
     bool is_at_terminal        = false;
     bool service_done          = false;
 
-    mutable int fuel = std::experimental::randint(150, 3000);
+    mutable int fuel = std::experimental::randint(MIN_FUEL, MAX_FUEL);
 
     // turn the aircraft to arrive at the next waypoint
     // try to facilitate reaching the waypoint after the next by facing the

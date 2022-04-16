@@ -1,6 +1,7 @@
 #pragma once
 
 #include <algorithm>
+#include <assert.h>
 #include <vector>
 
 namespace GL {
@@ -24,6 +25,7 @@ public:
 
     float get_z() const { return z; }
 
+    // We put static to have access outside the Class
     static inline std::vector<const Displayable*> display_queue;
 };
 
@@ -31,10 +33,12 @@ struct disp_z_cmp
 {
     bool operator()(const Displayable* a, const Displayable* b) const
     {
+        assert(a != NULL);
+        assert(b != NULL);
+
         const auto az = a->get_z();
         const auto bz = b->get_z();
         return (az == bz) ? (a > b) : (az > bz);
     }
 };
-
 } // namespace GL
